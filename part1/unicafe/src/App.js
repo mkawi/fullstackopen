@@ -8,11 +8,20 @@ const Button = ({ name, handleClick }) => {
 	);
 };
 
-const Statistics = (props) => {
-	const total = props.good + props.neutral + props.bad;
-	const positivePercentage = (100 * props.good) / total;
+const StatisticLine = (props) => {
+	return (
+		<div>
+			<strong>{props.name}: </strong>
+			{props.value}
+		</div>
+	);
+};
 
-	if (props.good === 0 && props.neutral === 0 && props.bad === 0) {
+const Statistics = (props) => {
+	const total = props.values.reduce((accum, prev) => accum + prev, 0);
+	const positivePercentage = (100 * props.values[0]) / total;
+
+	if (props.values[0] === 0 && props.values[1] === 0 && props.values[2] === 0) {
 		return (
 			<div>
 				<h2>Statistics</h2>
@@ -24,35 +33,12 @@ const Statistics = (props) => {
 	return (
 		<div>
 			<h2>Statistics</h2>
-			<div>
-				<strong>Good: </strong>
-				{props.good}
-			</div>
-			<div>
-				<strong>Neutral: </strong>
-				{props.neutral}
-			</div>
-			<div>
-				<strong>Bad: </strong>
-				{props.bad}
-			</div>
-			<div>
-				<strong>All: </strong>
-				{[props.good, props.neutral, props.bad].reduce(
-					(accum, prev) => accum + prev
-				)}
-			</div>
-			<div>
-				<strong>Average: </strong>
-				{[props.good, props.neutral, props.bad].reduce(
-					(accum, prev) => accum + prev,
-					0
-				) / 3}
-			</div>
-			<div>
-				<strong>Positive: </strong>
-				{positivePercentage}%
-			</div>
+			<StatisticLine name="Good" value={props.values[0]} />
+			<StatisticLine name="Neutral" value={props.values[1]} />
+			<StatisticLine name="Bad" value={props.values[2]} />
+			<StatisticLine name="All" value={total} />
+			<StatisticLine name="Average" value={total / 3} />
+			<StatisticLine name="Positive" value={`${positivePercentage}%`} />
 		</div>
 	);
 };
@@ -68,7 +54,7 @@ const App = () => {
 			<Button name="Good" handleClick={setGood} />
 			<Button name="Neutral" handleClick={setNeutral} />
 			<Button name="Bad" handleClick={setBad} />
-			<Statistics good={good} neutral={neutral} bad={bad} />
+			<Statistics values={[good, neutral, bad]} />
 		</div>
 	);
 };
