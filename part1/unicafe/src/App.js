@@ -9,17 +9,44 @@ const Button = ({ name, handleClick }) => {
 };
 
 const Statistics = (props) => {
+	const total = props.good + props.neutral + props.bad;
+	const positivePercentage = (100 * props.good) / total;
+
+	console.log(positivePercentage);
+
 	return (
 		<div>
 			<h2>Statistics</h2>
 			<div>
-				<strong>Good:</strong> {props.good}
+				<strong>Good: </strong>
+				{props.good}
 			</div>
 			<div>
-				<strong>Neutral:</strong> {props.neutral}
+				<strong>Neutral: </strong>
+				{props.neutral}
 			</div>
 			<div>
-				<strong>Bad:</strong> {props.bad}
+				<strong>Bad: </strong>
+				{props.bad}
+			</div>
+			<div>
+				<strong>All: </strong>
+				{[props.good, props.neutral, props.bad].reduce(
+					(accum, prev) => accum + prev
+				)}
+			</div>
+			<div>
+				<strong>Average: </strong>
+				{[props.good, props.neutral, props.bad].reduce(
+					(accum, prev) => accum + prev,
+					0
+				) / 3}
+			</div>
+			<div>
+				<strong>Positive: </strong>
+				{!isNaN(positivePercentage)
+					? `${positivePercentage}%`
+					: "Not Available"}
 			</div>
 		</div>
 	);
