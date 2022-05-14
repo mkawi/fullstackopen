@@ -12,7 +12,7 @@ const App = () => {
 	];
 
 	const [selected, setSelected] = useState(0);
-	const [vote, setVote] = useState(
+	const [votes, setVotes] = useState(
 		new Array(7 + 1).join("0").split("").map(parseFloat)
 	);
 
@@ -21,24 +21,43 @@ const App = () => {
 	}
 
 	function addVote() {
-		setVote((prevState) => {
+		setVotes((prevState) => {
 			const copy = [...prevState];
 			copy[selected] += 1;
 			return [...copy];
 		});
 	}
 
+	function highestVote() {
+		return votes.reduce((current, previous) => {
+			if (current >= previous) {
+				return current;
+			} else {
+				return previous;
+			}
+		}, 0);
+	}
+
 	return (
 		<div>
+			<h2>Anecdote of the Day</h2>
 			{anecdotes[selected]}
 			<div>
-				<strong>Vote: </strong>
-				{vote[selected]}
+				<strong>Votes: </strong>
+				{votes[selected]}
 			</div>
 			<div>
 				<button onClick={getRandomAnecdote}>Random Anecdote</button>
 				<button onClick={addVote}>Vote</button>
 			</div>
+			{votes.reduce((previous, current) => previous + current, 0) === 0 ? (
+				""
+			) : (
+				<div>
+					<h2>Anecdote with most votes</h2>{" "}
+					{anecdotes[votes.indexOf(highestVote())]}
+				</div>
+			)}
 		</div>
 	);
 };
