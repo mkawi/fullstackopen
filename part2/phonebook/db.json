@@ -41,11 +41,6 @@
       "id": 8
     },
     {
-      "name": "Pepper Pig",
-      "number": "1111111111111111111",
-      "id": 9
-    },
-    {
       "name": "Garfield",
       "number": "0748537345345",
       "id": 10
@@ -59,6 +54,26 @@
       "name": "Gandalf the White",
       "number": "345435334423423",
       "id": 12
+    },
+    {
+      "name": "Dumbledore",
+      "number": "555-3242343242",
+      "id": 13
+    },
+    {
+      "name": "Harry Potter",
+      "number": "4353453534354",
+      "id": 14
+    },
+    {
+      "name": "Hermonie",
+      "number": "4353454353544",
+      "id": 15
+    },
+    {
+      "name": "Ronald Weasley",
+      "number": "234234223423",
+      "id": 16
     }
   ]
 }

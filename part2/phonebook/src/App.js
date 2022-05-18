@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 import entryService from "./services/entryService";
 
@@ -11,6 +12,8 @@ const App = () => {
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
 	const [search, setSearch] = useState("");
+	const [notification, setNotification] = useState("");
+	const [showMsg, setShowMsg] = useState(false);
 
 	function submitForm(e) {
 		e.preventDefault();
@@ -22,7 +25,20 @@ const App = () => {
 				})
 				.then((response) => {
 					setPersons([...persons, response]);
+					setNotification({
+						status: "success",
+						msg: `Success: You added ${newName} to the Phonebook!`,
+					});
+					setShowMsg(true);
+				})
+				.catch((err) => {
+					setNotification({
+						status: "error",
+						msg: `Error: ${err}`,
+					});
+					setShowMsg(true);
 				});
+
 			setNewName("");
 			setNewNumber("");
 		} else {
@@ -42,6 +58,18 @@ const App = () => {
 								person.id !== personObj.id ? person : response
 							)
 						);
+						setNotification({
+							status: "success",
+							msg: `Success: You edited ${newName}'s number in the Phonebook!`,
+						});
+						setShowMsg(true);
+					})
+					.catch((err) => {
+						setNotification({
+							status: "error",
+							msg: `Error: ${err}`,
+						});
+						setShowMsg(true);
 					});
 			}
 		}
@@ -50,11 +78,25 @@ const App = () => {
 	function deletePerson(personName) {
 		if (window.confirm(`Are you sure you want to delete ${personName}`)) {
 			const personObj = persons.find((person) => person.name === personName);
-			entryService.deletePerson(personObj.id, personObj).then((response) => {
-				setPersons((prevState) => {
-					return prevState.filter((person) => person.id !== personObj.id);
+			entryService
+				.deletePerson(personObj.id, personObj)
+				.then((response) => {
+					setPersons((prevState) => {
+						setNotification({
+							status: "success",
+							msg: `Success: You deleted ${personObj.name} in the Phonebook!`,
+						});
+						setShowMsg(true);
+						return prevState.filter((person) => person.id !== personObj.id);
+					});
+				})
+				.catch((err) => {
+					setNotification({
+						status: "error",
+						msg: `Error: ${err}`,
+					});
+					setShowMsg(true);
 				});
-			});
 		}
 	}
 
@@ -64,9 +106,21 @@ const App = () => {
 		});
 	}, []);
 
+	useEffect(() => {
+		if (showMsg) {
+			const toRef = setTimeout(() => {
+				setShowMsg(false);
+				clearTimeout(toRef);
+			}, 3000);
+		}
+	}, [showMsg]);
+
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			{showMsg && (
+				<Notification status={notification.status} message={notification.msg} />
+			)}
 			<Filter search={search} persons={persons} setSearch={setSearch} />
 			<h3>Add new</h3>
 			<PersonForm
