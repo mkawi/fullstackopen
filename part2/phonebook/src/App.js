@@ -13,9 +13,16 @@ const App = () => {
 	function submitForm(e) {
 		e.preventDefault();
 		if (!persons.some((person) => person.name === newName)) {
-			setPersons((prevState) => {
-				return [...prevState, { name: newName, number: newNumber }];
-			});
+			axios
+				.post("http://localhost:3002/persons", {
+					name: newName,
+					number: newNumber,
+				})
+				.then((response) => {
+					setPersons((prevState) => {
+						return [...prevState, response.data];
+					});
+				});
 			setNewName("");
 			setNewNumber("");
 		} else {
