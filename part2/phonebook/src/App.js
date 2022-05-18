@@ -93,7 +93,7 @@ const App = () => {
 				.catch((err) => {
 					setNotification({
 						status: "error",
-						msg: `Error: ${err}`,
+						msg: `Error: ${personObj.name} has already been deleted`,
 					});
 					setShowMsg(true);
 				});
