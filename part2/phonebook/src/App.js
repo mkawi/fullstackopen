@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
+
+import entryService from "./services/entryService";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -13,15 +15,13 @@ const App = () => {
 	function submitForm(e) {
 		e.preventDefault();
 		if (!persons.some((person) => person.name === newName)) {
-			axios
-				.post("http://localhost:3002/persons", {
+			entryService
+				.create({
 					name: newName,
 					number: newNumber,
 				})
 				.then((response) => {
-					setPersons((prevState) => {
-						return [...prevState, response.data];
-					});
+					setPersons([...persons, response]);
 				});
 			setNewName("");
 			setNewNumber("");
@@ -31,8 +31,8 @@ const App = () => {
 	}
 
 	useEffect(() => {
-		axios.get("http://localhost:3002/persons").then((response) => {
-			setPersons(response.data);
+		entryService.getAll().then((response) => {
+			setPersons(response);
 		});
 	}, []);
 
