@@ -26,7 +26,24 @@ const App = () => {
 			setNewName("");
 			setNewNumber("");
 		} else {
-			alert(`${newName} is already added to Phonebook`);
+			if (
+				window.confirm(
+					`${newName} is already added, do you want to replace the old number with a new one?`
+				)
+			) {
+				const personObj = persons.find((person) => person.name === newName);
+				const changedPerson = { ...personObj, number: newNumber };
+
+				entryService
+					.updatePerson(personObj.id, changedPerson)
+					.then((response) => {
+						setPersons(
+							persons.map((person) =>
+								person.id !== personObj.id ? person : response
+							)
+						);
+					});
+			}
 		}
 	}
 
