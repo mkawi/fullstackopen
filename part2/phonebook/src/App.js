@@ -16,7 +16,7 @@ const App = () => {
 		e.preventDefault();
 		if (!persons.some((person) => person.name === newName)) {
 			entryService
-				.create({
+				.createPerson({
 					name: newName,
 					number: newNumber,
 				})
@@ -27,6 +27,17 @@ const App = () => {
 			setNewNumber("");
 		} else {
 			alert(`${newName} is already added to Phonebook`);
+		}
+	}
+
+	function deletePerson(personName) {
+		if (window.confirm(`Are you sure you want to delete ${personName}`)) {
+			const personObj = persons.find((person) => person.name === personName);
+			entryService.deletePerson(personObj.id, personObj).then((response) => {
+				setPersons((prevState) => {
+					return prevState.filter((person) => person.id !== personObj.id);
+				});
+			});
 		}
 	}
 
@@ -49,7 +60,7 @@ const App = () => {
 				setNewNumber={setNewNumber}
 			/>
 			<h3>Numbers</h3>
-			<Persons persons={persons} />
+			<Persons persons={persons} deletePerson={deletePerson} />
 		</div>
 	);
 };

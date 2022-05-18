@@ -6,6 +6,9 @@ function Persons(props) {
 					return (
 						<li key={person.name}>
 							{person.name} : {person.number}
+							<button onClick={() => props.deletePerson(person.name)}>
+								Delete
+							</button>
 						</li>
 					);
 				})}
