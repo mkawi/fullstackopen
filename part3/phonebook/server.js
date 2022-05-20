@@ -55,8 +55,20 @@ app.post("/api/persons", (req, res) => {
 		number: req.body.number,
 	};
 
-	persons.push(newPerson);
-	res.json(persons);
+	if (!req.body.name || !req.body.name) {
+		res.status(400).json({
+			error: "Name and/or Number is missing",
+		});
+	}
+
+	if (persons.some((person) => person.name === req.body.name)) {
+		res.status(400).json({
+			error: `Phonebook already contains name: ${req.body.name}`,
+		});
+	} else {
+		persons.push(newPerson);
+		res.json(persons);
+	}
 });
 
 app.get("/info", (req, res) => {
