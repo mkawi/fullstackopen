@@ -25,6 +25,8 @@ let persons = [
 	},
 ];
 
+app.use(express.json());
+
 app.get("/api/persons", (req, res) => {
 	res.json(persons);
 });
@@ -41,6 +43,20 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
 	persons = persons.filter((person) => person.id != req.params.id);
+	res.status(204).end();
+});
+
+app.post("/api/persons", (req, res) => {
+	const randomId = Math.floor(Math.random() * (9999999999 - 1 + 1)) + 1;
+
+	const newPerson = {
+		id: randomId,
+		name: req.body.name,
+		number: req.body.number,
+	};
+
+	persons.push(newPerson);
+	res.json(persons);
 });
 
 app.get("/info", (req, res) => {
