@@ -27,7 +27,7 @@ let persons = [
 
 app.use(express.json());
 app.use(
-	morgan(function (tokens, req, res) {
+	morgan((tokens, req, res) => {
 		return [
 			tokens.method(req, res),
 			tokens.url(req, res),
@@ -36,6 +36,7 @@ app.use(
 			"-",
 			tokens["response-time"](req, res),
 			"ms",
+			JSON.stringify(req.body),
 		].join(" ");
 	})
 );
