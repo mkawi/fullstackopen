@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const cors = require("cors");
 
 let persons = [
 	{
@@ -25,6 +26,7 @@ let persons = [
 	},
 ];
 
+app.use(cors());
 app.use(express.json());
 app.use(
 	morgan((tokens, req, res) => {
@@ -93,6 +95,6 @@ app.get("/info", (req, res) => {
 	);
 });
 
-app.listen(3000, () => {
-	console.log(`Server running on port 3000`);
+app.listen(3001, () => {
+	console.log(`Server running on port 3001`);
 });
