@@ -24,7 +24,8 @@ const App = () => {
 					number: newNumber,
 				})
 				.then((response) => {
-					setPersons([...response]);
+					console.log(response);
+					setPersons([...persons, response]);
 					setNotification({
 						status: "success",
 						msg: `Success: You added ${newName} to the Phonebook!`,

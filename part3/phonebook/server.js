@@ -33,13 +33,13 @@ app.get("/api/persons", (req, res) => {
 });
 
 app.get("/api/persons/:id", (req, res) => {
-	const person = persons.find((per) => per.id == req.params.id);
-
-	if (person) {
-		res.json(person);
-	} else {
-		res.status(404).end();
-	}
+	Entry.findById(req.params.id).then((response) => {
+		if (response) {
+			res.json(response);
+		} else {
+			res.status(404).end();
+		}
+	});
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -48,36 +48,31 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
-	const randomId = Math.floor(Math.random() * (9999999999 - 1 + 1)) + 1;
-
-	const newPerson = {
-		id: randomId,
-		name: req.body.name,
-		number: req.body.number,
-	};
-
-	if (!req.body.name || !req.body.name) {
+	if (!req.body.name || !req.body.number) {
 		res.status(400).json({
 			error: "Name and/or Number is missing",
 		});
-	}
-
-	if (persons.some((person) => person.name === req.body.name)) {
-		res.status(400).json({
-			error: `Phonebook already contains name: ${req.body.name}`,
-		});
 	} else {
-		persons.push(newPerson);
-		res.json(persons);
+		const newPerson = new Entry({
+			name: req.body.name,
+			number: req.body.number,
+		});
+
+		newPerson.save().then((savedEntry) => {
+			res.json(savedEntry);
+		});
 	}
 });
 
 app.get("/info", (req, res) => {
 	const date = new Date(Date.now());
-
-	res.send(
-		`Phonebook has info for ${persons.length} people <br/> ${date.toString()}`
-	);
+	Entry.find({}).then((response) => {
+		res.send(
+			`Phonebook has info for ${
+				response.length
+			} people <br/> ${date.toString()}`
+		);
+	});
 });
 
 app.listen(PORT, () => {
