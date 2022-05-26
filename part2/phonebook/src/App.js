@@ -80,7 +80,7 @@ const App = () => {
 		if (window.confirm(`Are you sure you want to delete ${personName}`)) {
 			const personObj = persons.find((person) => person.name === personName);
 			entryService
-				.deletePerson(personObj.id, personObj)
+				.deletePerson(personObj._id, personObj)
 				.then((response) => {
 					setPersons((prevState) => {
 						setNotification({
@@ -88,7 +88,7 @@ const App = () => {
 							msg: `Success: You deleted ${personObj.name} in the Phonebook!`,
 						});
 						setShowMsg(true);
-						return prevState.filter((person) => person.id !== personObj.id);
+						return prevState.filter((person) => person._id !== personObj._id);
 					});
 				})
 				.catch((err) => {

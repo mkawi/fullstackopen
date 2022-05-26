@@ -43,8 +43,10 @@ app.get("/api/persons/:id", (req, res) => {
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-	persons = persons.filter((person) => person.id != req.params.id);
-	res.status(204).end();
+	Entry.deleteOne({ _id: req.params.id }).then((response) => {
+		console.log(response);
+		res.status(204).end();
+	});
 });
 
 app.post("/api/persons", (req, res) => {
