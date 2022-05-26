@@ -27,26 +27,32 @@ app.use(
 );
 
 app.get("/api/persons", (req, res) => {
-	Entry.find({}).then((response) => {
-		res.json(response);
-	});
+	Entry.find({})
+		.then((response) => {
+			res.json(response);
+		})
+		.catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (req, res) => {
-	Entry.findById(req.params.id).then((response) => {
-		if (response) {
-			res.json(response);
-		} else {
-			res.status(404).end();
-		}
-	});
+	Entry.findById(req.params.id)
+		.then((response) => {
+			if (response) {
+				res.json(response);
+			} else {
+				res.status(404).end();
+			}
+		})
+		.catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-	Entry.deleteOne({ _id: req.params.id }).then((response) => {
-		console.log(response);
-		res.status(204).end();
-	});
+	Entry.deleteOne({ _id: req.params.id })
+		.then((response) => {
+			console.log(response);
+			res.status(204).end();
+		})
+		.catch((error) => next(error));
 });
 
 app.post("/api/persons", (req, res) => {
@@ -60,22 +66,39 @@ app.post("/api/persons", (req, res) => {
 			number: req.body.number,
 		});
 
-		newPerson.save().then((savedEntry) => {
-			res.json(savedEntry);
-		});
+		newPerson
+			.save()
+			.then((savedEntry) => {
+				res.json(savedEntry);
+			})
+			.catch((error) => next(error));
 	}
 });
 
 app.get("/info", (req, res) => {
 	const date = new Date(Date.now());
-	Entry.find({}).then((response) => {
-		res.send(
-			`Phonebook has info for ${
-				response.length
-			} people <br/> ${date.toString()}`
-		);
-	});
+	Entry.find({})
+		.then((response) => {
+			res.send(
+				`Phonebook has info for ${
+					response.length
+				} people <br/> ${date.toString()}`
+			);
+		})
+		.catch((error) => next(error));
 });
+
+const errorHandler = (error, request, response, next) => {
+	console.error(error.message);
+
+	if (error.name === "CastError") {
+		return response.status(400).send({ error: "malformatted id" });
+	}
+
+	next(error);
+};
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
