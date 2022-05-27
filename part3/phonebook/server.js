@@ -86,9 +86,9 @@ app.post("/api/persons", (req, res, next) => {
 });
 
 app.get("/info", (req, res, next) => {
-	const date = new Date(Date.now());
 	Entry.find({})
 		.then((response) => {
+			const date = new Date(Date.now());
 			res.send(
 				`Phonebook has info for ${
 					response.length
