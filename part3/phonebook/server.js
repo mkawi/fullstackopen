@@ -26,7 +26,7 @@ app.use(
 	})
 );
 
-app.get("/api/persons", (req, res) => {
+app.get("/api/persons", (req, res, next) => {
 	Entry.find({})
 		.then((response) => {
 			res.json(response);
@@ -34,7 +34,7 @@ app.get("/api/persons", (req, res) => {
 		.catch((error) => next(error));
 });
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res, next) => {
 	Entry.findById(req.params.id)
 		.then((response) => {
 			if (response) {
@@ -46,7 +46,17 @@ app.get("/api/persons/:id", (req, res) => {
 		.catch((error) => next(error));
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.put("/api/persons/:id", (req, res, next) => {
+	Entry.findByIdAndUpdate(req.params.id, { number: req.body.number })
+		.then(() => {
+			Entry.findById(req.params.id)
+				.then((response) => res.json(response))
+				.catch((error) => next(error));
+		})
+		.catch((error) => next(error));
+});
+
+app.delete("/api/persons/:id", (req, res, next) => {
 	Entry.deleteOne({ _id: req.params.id })
 		.then((response) => {
 			console.log(response);
@@ -55,7 +65,7 @@ app.delete("/api/persons/:id", (req, res) => {
 		.catch((error) => next(error));
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
 	if (!req.body.name || !req.body.number) {
 		res.status(400).json({
 			error: "Name and/or Number is missing",
@@ -75,7 +85,7 @@ app.post("/api/persons", (req, res) => {
 	}
 });
 
-app.get("/info", (req, res) => {
+app.get("/info", (req, res, next) => {
 	const date = new Date(Date.now());
 	Entry.find({})
 		.then((response) => {

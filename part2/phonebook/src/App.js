@@ -24,7 +24,6 @@ const App = () => {
 					number: newNumber,
 				})
 				.then((response) => {
-					console.log(response);
 					setPersons([...persons, response]);
 					setNotification({
 						status: "success",
@@ -52,13 +51,13 @@ const App = () => {
 				const changedPerson = { ...personObj, number: newNumber };
 
 				entryService
-					.updatePerson(personObj.id, changedPerson)
+					.updatePerson(personObj._id, changedPerson)
 					.then((response) => {
-						setPersons(
-							persons.map((person) =>
-								person.id !== personObj.id ? person : response
-							)
-						);
+						setPersons((prevState) => {
+							return prevState.map((person) =>
+								person._id !== personObj._id ? person : response
+							);
+						});
 						setNotification({
 							status: "success",
 							msg: `Success: You edited ${newName}'s number in the Phonebook!`,
