@@ -32,9 +32,10 @@ const App = () => {
 					setShowMsg(true);
 				})
 				.catch((err) => {
+					console.log(err);
 					setNotification({
 						status: "error",
-						msg: `Error: ${err}`,
+						msg: `Error: ${err.response.data.error}`,
 					});
 					setShowMsg(true);
 				});
